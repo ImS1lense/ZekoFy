@@ -293,7 +293,7 @@
     gap: 20px;
     margin-bottom: 30px;
   }
-  
+   
   .loading-message {
     font-size: 1.1rem;
     color: var(--glow-color);
@@ -378,7 +378,7 @@
     width: 100%;
     padding: 8px 12px;
   }
-  
+   
   .track button i {
       font-size: 14px;
   }
@@ -678,76 +678,6 @@
     }
   }
 
-  /* Дополнительные функции */
-  .effects-panel {
-    position: fixed;
-    bottom: 180px;
-    right: 20px;
-    background: rgba(10, 10, 10, 0.9);
-    border-radius: 15px;
-    padding: 15px;
-    box-shadow: var(--shadow-light);
-    border: 1px solid var(--glow-color);
-    z-index: 150;
-    backdrop-filter: blur(10px);
-    transform: translateY(0);
-    transition: transform 0.3s ease;
-  }
-
-  .effects-panel.hidden {
-    transform: translateY(100px);
-    opacity: 0;
-    pointer-events: none;
-  }
-
-  .effects-toggle {
-    position: absolute;
-    top: -35px;
-    right: 0;
-    background: rgba(10, 10, 10, 0.9);
-    border: 1px solid var(--glow-color);
-    border-radius: 50%;
-    width: 40px;
-    height: 40px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    cursor: pointer;
-    font-size: 18px;
-  }
-
-  .effect-btn {
-    background: rgba(255, 255, 255, 0.05);
-    border: 1px solid rgba(255, 255, 255, 0.2);
-    border-radius: 8px;
-    padding: 8px 12px;
-    color: var(--text-light);
-    cursor: pointer;
-    transition: all 0.3s ease;
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    font-size: 12px;
-    margin-bottom: 8px;
-    width: 100%;
-  }
-
-  .effect-btn:last-child {
-    margin-bottom: 0;
-  }
-
-  .effect-btn.active {
-    background: rgba(255, 255, 255, 0.15);
-    border-color: var(--glow-color);
-    color: var(--glow-color);
-    box-shadow: 0 0 10px var(--glow-color);
-  }
-
-  .effect-btn:hover {
-    background: rgba(255, 255, 255, 0.1);
-    transform: translateY(-2px);
-  }
-
   /* Уведомления */
   .notification {
     position: fixed;
@@ -786,12 +716,12 @@
       flex-direction: column;
       gap: 15px;
     }
-    
+     
     .now-playing, .player-controls, .player-options {
       width: 100%;
       justify-content: center;
     }
-    
+     
     #player {
       height: auto;
     }
@@ -855,12 +785,6 @@
       width: 60px;
     }
 
-    .effects-panel {
-      bottom: 200px;
-      right: 10px;
-      left: 10px;
-    }
-
     .notification {
       right: 10px;
       left: 10px;
@@ -915,7 +839,6 @@
 
 <div class="background-animation"></div>
 
-<!-- Мобильное меню -->
 <button class="mobile-menu-btn" id="mobileMenuBtn">
   <i class="fas fa-bars"></i>
 </button>
@@ -972,30 +895,6 @@
   <div id="results"></div>
 </div>
 
-<!-- Панель эффектов -->
-<div class="effects-panel" id="effectsPanel">
-  <div class="effects-toggle" id="effectsToggle">
-    <i class="fas fa-magic"></i>
-  </div>
-  <button class="effect-btn" onclick="toggleEffect('glow')">
-    <i class="fas fa-fire"></i>
-    <span>Неоновое свечение</span>
-  </button>
-  <button class="effect-btn" onclick="toggleEffect('particles')">
-    <i class="fas fa-sparkles"></i>
-    <span>Частицы</span>
-  </button>
-  <button class="effect-btn" onclick="toggleEffect('pulse')">
-    <i class="fas fa-heartbeat"></i>
-    <span>Пульсация</span>
-  </button>
-  <button class="effect-btn" onclick="toggleEffect('rainbow')">
-    <i class="fas fa-rainbow"></i>
-    <span>Радуга</span>
-  </button>
-</div>
-
-<!-- Уведомления -->
 <div class="notification" id="notification">
   <div class="notification-content">
     <i class="fas fa-check-circle"></i>
@@ -1003,7 +902,6 @@
   </div>
 </div>
 
-<!-- Плеер -->
 <div id="player">
   <div class="player-toggle" id="playerToggle">
     <i class="fas fa-chevron-up" id="playerToggleIcon"></i>
@@ -1080,14 +978,13 @@ let isDraggingVolume = false;
 let volumeVisualizerInterval = null;
 let currentVolume = 50;
 let isShuffle = false;
-let activeEffects = new Set();
 
 // Поиск песен
 async function searchMusic() {
   const q = document.getElementById("query").value.trim();
   if (!q) return;
   document.getElementById("results").innerHTML = "<p class='loading-message'>Загрузка...</p>";
-  
+   
   try {
     const res = await fetch(`https://www.googleapis.com/youtube/v3/search?part=snippet&type=video&maxResults=12&q=${encodeURIComponent(q)}&key=${API_KEY}`);
     if (!res.ok) {
@@ -1113,7 +1010,7 @@ function renderResults(items) {
       container.innerHTML = "<p class='loading-message'>Ничего не найдено.</p>";
       return;
   }
-  
+   
   items.forEach((it, index) => {
     const vid = it.id.videoId;
     const title = it.snippet.title;
@@ -1188,13 +1085,12 @@ function playTrack(index) {
 function onPlayerStateChange(event) {
   const playPauseIcon = document.getElementById("playPauseIcon");
   const visualizer = document.getElementById("visualizer");
-  
+   
   if (event.data == YT.PlayerState.PLAYING) {
     playPauseIcon.className = 'fas fa-pause';
     visualizer.classList.add('playing');
     startProgressUpdate();
     startVolumeVisualizer();
-    applyEffects();
   } else if (event.data == YT.PlayerState.PAUSED) {
     playPauseIcon.className = 'fas fa-play';
     visualizer.classList.remove('playing');
@@ -1209,7 +1105,7 @@ function onPlayerStateChange(event) {
 // Обновление информации о плеере
 function updatePlayerInfo() {
   if (!player || typeof player.getDuration !== 'function') return;
-  
+   
   const duration = player.getDuration();
   document.getElementById("durationTime").textContent = formatTime(duration);
   document.getElementById("volumeLevel").style.width = `${currentVolume}%`;
@@ -1240,7 +1136,7 @@ function startProgressUpdate() {
       requestAnimationFrame(update);
     }
   }
-  
+   
   update();
 }
 
@@ -1249,7 +1145,7 @@ function startVolumeVisualizer() {
   if (volumeVisualizerInterval) {
     clearInterval(volumeVisualizerInterval);
   }
-  
+   
   volumeVisualizerInterval = setInterval(() => {
     if (!player || player.getPlayerState() !== YT.PlayerState.PLAYING) return;
     
@@ -1268,7 +1164,7 @@ function stopVolumeVisualizer() {
 
 function updateVisualizer(volume) {
   const volumeMultiplier = volume / 100;
-  
+   
   for (let i = 1; i <= 8; i++) {
     const bar = document.getElementById(`bar${i}`);
     if (bar) {
@@ -1346,7 +1242,7 @@ function skipTrack(direction) {
     if (newIndex < 0) newIndex = currentPlaylist.length - 1;
     if (newIndex >= currentPlaylist.length) newIndex = 0;
   }
-  
+   
   playTrack(newIndex);
 }
 
@@ -1367,40 +1263,14 @@ function toggleShuffle() {
   }
 }
 
-// Эффекты
-function toggleEffect(effect) {
-  const btn = event.target.closest('.effect-btn');
-  
-  if (activeEffects.has(effect)) {
-    activeEffects.delete(effect);
-    btn.classList.remove('active');
-    showNotification(`Эффект "${effect}" выключен`);
-  } else {
-    activeEffects.add(effect);
-    btn.classList.add('active');
-    showNotification(`Эффект "${effect}" включен`);
-  }
-  
-  applyEffects();
-}
-
-function applyEffects() {
-  // Здесь можно добавить реальные эффекты
-  // Например, изменение CSS переменных или добавление классов
-  document.body.classList.toggle('glow-effect', activeEffects.has('glow'));
-  document.body.classList.toggle('particles-effect', activeEffects.has('particles'));
-  document.body.classList.toggle('pulse-effect', activeEffects.has('pulse'));
-  document.body.classList.toggle('rainbow-effect', activeEffects.has('rainbow'));
-}
-
 // Уведомления
 function showNotification(text, type = "success") {
   const notification = document.getElementById('notification');
   const notificationText = document.getElementById('notificationText');
-  
+   
   notificationText.textContent = text;
   notification.className = `notification show ${type}`;
-  
+   
   setTimeout(() => {
     notification.classList.remove('show');
   }, 3000);
@@ -1410,7 +1280,7 @@ function showNotification(text, type = "success") {
 function toggleMobileMenu() {
   const menu = document.getElementById('mobileMenu');
   const overlay = document.getElementById('mobileMenuOverlay');
-  
+   
   menu.classList.toggle('active');
   overlay.classList.toggle('active');
 }
@@ -1419,16 +1289,10 @@ function toggleMobileMenu() {
 function togglePlayer() {
   const player = document.getElementById('player');
   const icon = document.getElementById('playerToggleIcon');
-  
+   
   player.classList.toggle('minimized');
   icon.className = player.classList.contains('minimized') ? 
     'fas fa-chevron-down' : 'fas fa-chevron-up';
-}
-
-// Сворачивание панели эффектов
-function toggleEffectsPanel() {
-  const panel = document.getElementById('effectsPanel');
-  panel.classList.toggle('hidden');
 }
 
 // Инициализация
@@ -1437,11 +1301,11 @@ document.addEventListener('DOMContentLoaded', () => {
   document.getElementById('query').addEventListener('keypress', (e) => {
     if (e.key === 'Enter') searchMusic();
   });
-  
+   
   // Ползунки
   const progressBar = document.getElementById('progressBar');
   const volumeBar = document.getElementById('volumeBar');
-  
+   
   // Прогресс-бар
   progressBar.addEventListener('click', (e) => {
     if (!player || typeof player.getDuration !== 'function') return;
@@ -1453,7 +1317,7 @@ document.addEventListener('DOMContentLoaded', () => {
     
     player.seekTo(newTime, true);
   });
-  
+   
   // Громкость
   volumeBar.addEventListener('click', (e) => {
     if (!player || typeof player.setVolume !== 'function') return;
@@ -1466,27 +1330,24 @@ document.addEventListener('DOMContentLoaded', () => {
     document.getElementById('volumeLevel').style.width = `${currentVolume}%`;
     updateVolumeIcon(currentVolume);
   });
-  
+   
   // Мобильное меню
   document.getElementById('mobileMenuBtn').addEventListener('click', toggleMobileMenu);
   document.getElementById('mobileMenuOverlay').addEventListener('click', toggleMobileMenu);
-  
+   
   // Сворачивание плеера
   document.getElementById('playerToggle').addEventListener('click', togglePlayer);
-  
-  // Панель эффектов
-  document.getElementById('effectsToggle').addEventListener('click', toggleEffectsPanel);
-  
+   
   // Инициализация визуализатора
   resetVisualizer();
-  
+   
   // Swipe для мобильных
   let startX, startY;
   document.addEventListener('touchstart', e => {
     startX = e.touches[0].clientX;
     startY = e.touches[0].clientY;
   });
-  
+   
   document.addEventListener('touchend', e => {
     if (!startX || !startY) return;
     
@@ -1507,7 +1368,7 @@ document.addEventListener('DOMContentLoaded', () => {
     startX = null;
     startY = null;
   });
-  
+   
   // Двойное нажатие для лайка
   let lastTap = 0;
   document.addEventListener('touchend', e => {
